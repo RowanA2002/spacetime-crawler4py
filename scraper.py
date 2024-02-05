@@ -1,9 +1,12 @@
 import re
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
-def scraper(url, resp):
+from utils import download
+
+def scraper(url, resp, config, logger):
     links = extract_next_links(url, resp)
-    return [link for link in links if is_valid(link)]
+    return [link for link in links if is_valid(link, config, logger)]
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -15,17 +18,24 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    return list()
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+    hyperlinks = soup.find_all(href=True)
+    return [link["href"] for link in hyperlinks]
 
-def is_valid(url):
+def is_valid(url, config, logger):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
+
+    # politeness -- need to do if using multithreading, otherwise already implemented when num threads = 1 using sleep
+    # high textual content
+    # domain
+
     try:
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        return not re.match(
+        if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
@@ -33,7 +43,19 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
+            return False
+        # check for valid domain
+        # TODO: robot.txt?
+        if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
+            return False
+        
+        # check for textual content
+        resp = download(url, config, logger)
+        soup = BeautifulSoup(resp.raw_response.content)
+        
+
+
 
     except TypeError:
         print ("TypeError for ", parsed)
