@@ -2,7 +2,7 @@ import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
-from utils import download
+from utils.download import download
 
 def scraper(url, resp, config, logger):
     links = extract_next_links(url, resp)
@@ -50,13 +50,12 @@ def is_valid(url, config, logger):
         if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
             return False
         
-        # check for textual content
         resp = download(url, config, logger)
-        soup = BeautifulSoup(resp.raw_response.content)
+        if resp.error == None and resp.raw_response != None:
+            soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+            # TODO: check for textual content
+        return True
         
-
-
-
     except TypeError:
         print ("TypeError for ", parsed)
         raise
