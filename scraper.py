@@ -1,5 +1,6 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urldefrag
+from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup
 
 from utils.download import download
@@ -18,9 +19,23 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
+
+    urls_list = []
+    if (resp.error != None):
+        print(resp.error)
+        return urls_list
+
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
-    hyperlinks = soup.find_all(href=True)
-    return [link["href"] for link in hyperlinks]
+
+    for link in soup.find_all(href=True):
+        found_url = link['href']
+        found_url = urldefrag(found_url)[0] #defrag URL using urlparse
+        parsed = urlparse(found_url) #parse URL using urldefrag from urllib.parse
+        if (parsed.scheme not in set(["http", "https"])): #check if found_url is a relative URL
+            found_url = url + found_url #if not, concatenate url to found_url create absolute url
+        urls_list.append(found_url)
+
+    return urls_list
 
 def is_valid(url, config, logger):
     # Decide whether to crawl this url or not. 
