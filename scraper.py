@@ -1,5 +1,6 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urldefrag
+from bs4 import BeautifulSoup
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -15,12 +16,35 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    return list()
+
+    urls_list = []
+    if (resp.error != None):
+        print(resp.error)
+        return urls_list
+
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+
+    for link in soup.find_all(href=True):
+        found_url = link['href']
+        found_url = urldefrag(found_url)[0] #defrag URL using urlparse
+        parsed = urlparse(found_url) #parse URL using urldefrag from urllib.parse
+        if (parsed.scheme not in set(["http", "https"])): #check if found_url is a relative URL
+            found_url = url + found_url #if not, concatenate url to found_url create absolute url
+        urls_list.append(found_url)
+
+    return urls_list
 
 def is_valid(url):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
+
+    #politeness
+    #high textual content
+    #get resp again in is_valid
+    #resp = download(tbd_url, self.config, self.logger)
+
+
     try:
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
