@@ -1,6 +1,5 @@
 import re
-from urllib.parse import urlparse, urldefrag
-from bs4 import BeautifulSoup
+from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 
 from utils.download import download
@@ -29,11 +28,16 @@ def extract_next_links(url, resp):
 
     for link in soup.find_all(href=True):
         found_url = link['href']
-        found_url = urldefrag(found_url)[0] #defrag URL using urlparse
-        parsed = urlparse(found_url) #parse URL using urldefrag from urllib.parse
-        if (parsed.scheme not in set(["http", "https"])): #check if found_url is a relative URL
-            found_url = url + found_url #if not, concatenate url to found_url create absolute url
-        urls_list.append(found_url)
+        found_url = urldefrag(found_url)[0] #defrag URL using urldefrag from urllib
+        parsed = urlparse(found_url)
+        if (len(found_url) != 0) and (parsed.scheme not in set(["http", "https"])): #check if found_url is a relative URL
+            if re.match(r"^\/\/", found_url): # if url starts with // (shorthand to request reference url using protocol of current url)
+                current_protocol = urlparse(url).scheme
+                found_url = current_protocol + ":" + found_url
+            else:
+                found_url = urljoin(url,found_url) #if not, join urls using urljoin from urllib
+        if len(found_url)!= 0:
+            urls_list.append(found_url)
 
     return urls_list
 
