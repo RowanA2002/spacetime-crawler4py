@@ -30,7 +30,7 @@ def extract_next_links(url, resp):
         found_url = link['href']
         found_url = urldefrag(found_url)[0] #defrag URL using urldefrag from urllib
         parsed = urlparse(found_url)
-        if (len(found_url) != 0) and (parsed.scheme not in set(["http", "https"])): #check if found_url is a relative URL
+        if (len(found_url) != 0) and (parsed.scheme == ""): #check if found_url is a relative URL
             if re.match(r"^\/\/", found_url): # if url starts with // (shorthand to request reference url using protocol of current url)
                 current_protocol = urlparse(url).scheme
                 found_url = current_protocol + ":" + found_url
