@@ -3,6 +3,7 @@ from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 
 from utils.download import download
+from utils.information_value import information_value
 
 def scraper(url, resp, config, logger):
     links = extract_next_links(url, resp)
@@ -70,7 +71,10 @@ def is_valid(url, config, logger):
         resp = download(url, config, logger)
         if resp.error == None and resp.raw_response != None:
             soup = BeautifulSoup(resp.raw_response.content, "html.parser")
-            # TODO: check for textual content
+            info = information_value(soup)
+            if info < 1: 
+                logger.info(f"Skipped {url}: information value = {info} < 1")
+                return False
         return True
         
     except TypeError:

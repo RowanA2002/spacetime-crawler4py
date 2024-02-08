@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from tokenize_string import tokenize
+from utils.tokenize_string import tokenize
 
 def information_value(soup: BeautifulSoup):
     """Computes a ration of tags to string text representing information value"""
@@ -9,4 +9,4 @@ def information_value(soup: BeautifulSoup):
     token_count = 0
     for s in soup.stripped_strings:
         token_count += len(tokenize(s))
-    return token_count/tag_count
+    return token_count/tag_count if tag_count > 0 else token_count
