@@ -64,9 +64,8 @@ def is_valid(url, config, logger):
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
             return False
-        # check for valid domain
         # TODO: robot.txt?
-        if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
+        if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):  # check url is in valid domain
             return False
         
         resp = download(url, config, logger)
