@@ -48,7 +48,6 @@ def is_valid(url, config, logger):
 
     # politeness -- need to do if using multithreading, otherwise already implemented when num threads = 1 using sleep
     # high textual content
-    # domain
 
     try:
         parsed = urlparse(url)

@@ -10,7 +10,7 @@ def tokenize(s: str) -> List[str]:
         tokens= []
         with StringIO(s) as stream:  # replaces characters that fail decoding with a valid char
             current_token = ''
-            #  O(n) for n chars in the file
+            #  O(n) for n chars in the string
             while True:
                 char = ''
                 try:  # catch any decoding errors
