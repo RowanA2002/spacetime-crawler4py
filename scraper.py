@@ -1,9 +1,12 @@
 import re
+import shelve
+
 from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 
 from utils.download import download
 from utils.information_value import information_value
+from utils.get_parents import get_parents
 
 def scraper(url, resp, config, logger):
     links = extract_next_links(url, resp)
@@ -75,8 +78,12 @@ def is_valid(url, config, logger):
             if info < 1: 
                 logger.info(f"Skipped {url}: information value = {info} < 1")
                 return False
-        return True
         
+        # trap check
+        save = shelve.open(config.save_file)
+        parents = get_parents(url, save, 5) # number should be chnaged based on trap check implementation
+
+        return True
     except TypeError:
         print ("TypeError for ", parsed)
         raise

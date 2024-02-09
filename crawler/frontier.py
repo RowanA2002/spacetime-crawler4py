@@ -27,19 +27,19 @@ class Frontier(object):
         self.save = shelve.open(self.config.save_file)
         if restart:
             for url in self.config.seed_urls:
-                self.add_url(url)
+                self.add_url(url, None)
         else:
             # Set the frontier state with contents of save file.
             self._parse_save_file()
             if not self.save:
                 for url in self.config.seed_urls:
-                    self.add_url(url)
+                    self.add_url(url, None)
 
     def _parse_save_file(self):
         ''' This function can be overridden for alternate saving techniques. '''
-        total_count = len(self.save)
+        total_count = len(self.save) 
         tbd_count = 0
-        for url, completed in self.save.values():
+        for url, completed, _ in self.save.values():
             if not completed and is_valid(url, self.config, self.logger):
                 self.to_be_downloaded.append(url)
                 tbd_count += 1
@@ -53,11 +53,11 @@ class Frontier(object):
         except IndexError:
             return None
 
-    def add_url(self, url):
+    def add_url(self, url, parent_url=None):
         url = normalize(url)
         urlhash = get_urlhash(url)
         if urlhash not in self.save:
-            self.save[urlhash] = (url, False)
+            self.save[urlhash] = (url, False, parent_url)
             self.save.sync()
             self.to_be_downloaded.append(url)
     
@@ -68,5 +68,5 @@ class Frontier(object):
             self.logger.error(
                 f"Completed url {url}, but have not seen it before.")
 
-        self.save[urlhash] = (url, True)
+        self.save[urlhash] = (url, True, self.save[urlhash][2])
         self.save.sync()
