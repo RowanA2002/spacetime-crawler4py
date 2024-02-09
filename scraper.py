@@ -5,10 +5,10 @@ from bs4 import BeautifulSoup
 from utils.download import download
 
 def scraper(url, resp, config, logger):
-    links = extract_next_links(url, resp)
+    links = extract_next_links(url, resp, logger)
     return [link for link in links if is_valid(link, config, logger)]
 
-def extract_next_links(url, resp):
+def extract_next_links(url, resp, logger):
     # Implementation required.
     # url: the URL that was used to get the page
     # resp.url: the actual url of the page
@@ -21,10 +21,12 @@ def extract_next_links(url, resp):
 
     urls_list = []
     if (resp.error != None):
+        logger.info(resp.error)
         print(resp.error)
         return urls_list
     elif (resp.raw_response.content == "" or resp.raw_response.content == None): #Check for dead pages
         print("Page has no data")
+        logger.info("Page has no data")
         return urls_list
 
     unique_urls = set() #keeps track of unique urls on page
@@ -48,8 +50,7 @@ def extract_next_links(url, resp):
         
         #check for repeating directories
         if (re.match(r'\/([^\/]+)\/(.+\/)?\1\/(.+\/)?\1', found_url)): #check if directory is repeated 3 or more times
-            urls_list.append(found_url)
-            unique_urls.add(found_url)
+            continue
 
         #Check for dynamic urls
         if "?" in (found_url):
