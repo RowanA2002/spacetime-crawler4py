@@ -55,7 +55,7 @@ def extract_next_links(url, resp):
         if "?" in (found_url):
             found_url = found_url.split("?")[0]
 
-            if (found_url) == url: #don't add url without query parameters is same as previous url
+            if (found_url) == url: #don't add if url without query parameters is same as parent url
                 continue 
 
         if found_url not in unique_urls:
