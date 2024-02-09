@@ -45,12 +45,17 @@ def extract_next_links(url, resp):
 
         if len(found_url) == 0: #Check URL is not empty string
             continue
+        
+        #check for repeating directories
+        if (re.match(r'\/([^\/]+)\/(.+\/)?\1\/(.+\/)?\1', found_url)): #check if directory is repeated 3 or more times
+            urls_list.append(found_url)
+            unique_urls.add(found_url)
 
         #Check for dynamic urls
         if "?" in (found_url):
             found_url = found_url.split("?")[0]
 
-            if (found_url) == url: #don't crawl if url without query parameters is same as previous url
+            if (found_url) == url: #don't add url without query parameters is same as previous url
                 continue 
 
         if found_url not in unique_urls:
