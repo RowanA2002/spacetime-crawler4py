@@ -8,11 +8,11 @@ from utils.download import download
 from utils.information_value import information_value
 from utils.get_parents import get_parents
 
-def scraper(url, resp, config, logger):
-    links = extract_next_links(url, resp)
+def scraper(url, resp, config, logger, frontier):
+    links = extract_next_links(url, resp, frontier, logger)
     return [link for link in links if is_valid(link, config, logger)]
 
-def extract_next_links(url, resp):
+def extract_next_links(url, resp, frontier, logger):
     # Implementation required.
     # url: the URL that was used to get the page
     # resp.url: the actual url of the page
@@ -40,6 +40,9 @@ def extract_next_links(url, resp):
                 found_url = current_protocol + ":" + found_url
             else:
                 found_url = urljoin(url,found_url) #if not, join urls using urljoin from urllib
+        # trap check
+        parents = get_parents(url, frontier, 5) # number should be chnaged based on trap check implementation
+        logger.info(f"{url} had parents {parents}")
         if len(found_url)!= 0:
             urls_list.append(found_url)
 
@@ -64,7 +67,7 @@ def is_valid(url, config, logger):
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv|json"
+            + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
             return False
         # TODO: robot.txt?
@@ -78,11 +81,6 @@ def is_valid(url, config, logger):
             if info < 1: 
                 logger.info(f"Skipped {url}: information value = {info} < 1")
                 return False
-        
-        # trap check
-        save = shelve.open(config.save_file)
-        parents = get_parents(url, save, 5) # number should be chnaged based on trap check implementation
-
         return True
     except TypeError:
         print ("TypeError for ", parsed)

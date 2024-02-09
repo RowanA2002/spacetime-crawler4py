@@ -61,6 +61,18 @@ class Frontier(object):
             self.save.sync()
             self.to_be_downloaded.append(url)
     
+    def get_parent(self, url):
+        url = normalize(url)
+        urlhash = get_urlhash(url)
+        if urlhash not in self.save:
+            raise
+        return self.save[urlhash][2]
+    
+    def exists_in_shelf(self, url):
+        url = normalize(url)
+        urlhash = get_urlhash(url)
+        return urlhash in self.save
+
     def mark_url_complete(self, url):
         urlhash = get_urlhash(url)
         if urlhash not in self.save:
