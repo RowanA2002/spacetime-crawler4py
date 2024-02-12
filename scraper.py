@@ -1,3 +1,4 @@
+import csv
 import re
 import shelve
 
@@ -7,6 +8,7 @@ from bs4 import BeautifulSoup
 from utils.download import download
 from utils.information_value import information_value
 from utils.get_parents import get_parents
+from utils.tokenize_string import tokenize
 
 def scraper(url, resp, config, logger, frontier):
     links = extract_next_links(url, resp, frontier, logger)
@@ -31,32 +33,47 @@ def extract_next_links(url, resp, frontier, logger):
         print("Page has no data")
         return urls_list
 
-    unique_urls = set() #keeps track of unique urls on page
-    unique_urls.add(url) #add parent url to set
+    unique_urls = set() # keeps track of unique urls on page
+    unique_urls.add(url) # add parent url to set
 
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
 
+    # Report processing
+    page_token_count = 0
+
+    # Record all tokens in page
+    with open(frontier.config.word_file, 'at') as words:
+        for strings in soup.stripped_strings:
+            tokens = tokenize(strings)
+            page_token_count += len(tokens)
+            words.write(' '.join(tokenize) + '\n')
+
+    # Record url and token count
+    with open(frontier.config.url_file, 'w', newline='') as urlcount:
+        urlwriter = csv.writer(urlcount)
+        urlwriter.writerow([url, len(page_token_count)])
+
     for link in soup.find_all(href=True):
         found_url = link['href']
-        found_url = urldefrag(found_url)[0] #defrag URL using urldefrag from urllib
+        found_url = urldefrag(found_url)[0] # defrag URL using urldefrag from urllib
         parsed = urlparse(found_url)
-        if (len(found_url) != 0) and (parsed.scheme == ""): #check if found_url is a relative URL
+        if (len(found_url) != 0) and (parsed.scheme == ""): # check if found_url is a relative URL
             if re.match(r"^(\/\/)", found_url): # if url starts with // (shorthand to request reference url using protocol of current url)
                 current_protocol = urlparse(url).scheme
                 found_url = current_protocol + ":" + found_url
             else:
-                found_url = urljoin(url, found_url) #if not, join urls using urljoin from urllib
+                found_url = urljoin(url, found_url) # if not, join urls using urljoin from urllib
 
-        #Check for dynamic urls
+        # Check for dynamic urls
         if "?" in (found_url):
             found_url = found_url.split("?")[0]
 
-            if (found_url) == url: #don't crawl if url without query parameters is same as previous url
+            if (found_url) == url: # don't crawl if url without query parameters is same as previous url
                 continue 
         # trap check
         parents = get_parents(url, frontier, 5) # number should be chnaged based on trap check implementation
         logger.info(f"{found_url} had parents {parents}")
-        if len(found_url) == 0: #Check URL is not empty string
+        if len(found_url) == 0: # Check URL is not empty string
             continue
 
         if found_url not in unique_urls:
@@ -69,9 +86,6 @@ def is_valid(url, config, logger):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
-
-    # politeness -- need to do if using multithreading, otherwise already implemented when num threads = 1 using sleep
-    # high textual content
 
     try:
         parsed = urlparse(url)
@@ -87,7 +101,6 @@ def is_valid(url, config, logger):
             + r"|thmx|mso|arff|rtf|jar|csv|json"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|.*(json|xmlrpc|mailto)", parsed.path.lower()):
             return False
-        # TODO: robot.txt?
         if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):  # check url is in valid domain
             return False
         
@@ -95,8 +108,8 @@ def is_valid(url, config, logger):
         if resp.error == None and resp.raw_response != None:
             soup = BeautifulSoup(resp.raw_response.content, "html.parser")
             info = information_value(soup)
-            if info < 1: 
-                logger.info(f"Skipped {url}: information value = {info} < 1")
+            if info < 0.33: 
+                logger.info(f"Skipped {url}: information value = {info} < 1/3")
                 return False
         return True
     except TypeError:

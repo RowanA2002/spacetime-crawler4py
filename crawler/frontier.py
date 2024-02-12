@@ -35,6 +35,35 @@ class Frontier(object):
                 for url in self.config.seed_urls:
                     self.add_url(url, None)
 
+        if not os.path.exists(self.config.url_file) and not restart:
+            # Url file does not exist, but request to load save.
+            self.logger.info(
+                f"Did not find url file {self.config.url_file}, "
+                f"Creating a new one.")
+            open(self.config.url_file, 'x')
+        elif os.path.exists(self.config.url_file) and restart:
+            # Url file does exists, but request to start from seed.
+            self.logger.info(
+                f"Found url file {self.config.url_file}, deleting it.")
+            os.remove(self.config.url_file)
+            # Create one if it does not exist.
+            open(self.config.url_file, 'x')
+
+        if not os.path.exists(self.config.word_file) and not restart:
+            # Word file does not exist, but request to load save.
+            self.logger.info(
+                f"Did not find word file {self.config.word_file}, "
+                f"Creating a new one.")
+            open(self.config.word_file, 'x')
+        elif os.path.exists(self.config.word_file) and restart:
+            # Word file does exists, but request to start from seed.
+            self.logger.info(
+                f"Found word file {self.config.word_file}, deleting it.")
+            os.remove(self.config.word_file)
+            # Create one if it does not exist.
+            open(self.config.word_file, 'x')
+            
+
     def _parse_save_file(self):
         ''' This function can be overridden for alternate saving techniques. '''
         total_count = len(self.save) 
