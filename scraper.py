@@ -85,9 +85,13 @@ def is_valid(url, config, logger):
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv|json"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|json", parsed.path.lower()):
+            + r"|thmx|mso|arff|rtf|jar|csv|"
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
             return False
+
+        if re.search(r"json", parsed.path):
+            return False
+
         # check for valid domain
         # TODO: robot.txt?
         if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
