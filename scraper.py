@@ -52,6 +52,13 @@ def extract_next_links(url, resp, logger):
         if (re.match(r'\/([^\/]+)\/(.+\/)?\1\/(.+\/)?\1', found_url)): #check if directory is repeated 3 or more times
             continue
 
+        #check for calendar traps
+        pattern = r'\/?([0-9]{0,2})\/([0-9]{0,2})\/([0-9]{4})($|\/)$'
+
+        if (re.search(pattern, url) and re.search(pattern, found_url)):
+            if(re.sub(pattern, "", url) == re.sub(pattern, "", found_url)):
+                continue
+
         #Check for dynamic urls
         if "?" in (found_url):
             found_url = found_url.split("?")[0]
@@ -85,11 +92,8 @@ def is_valid(url, config, logger):
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv|"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
-            return False
-
-        if re.search(r"json", parsed.path):
+            + r"|thmx|mso|arff|rtf|jar|csv|json"
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|.*(json|xmlrpc|mailto)", parsed.path.lower()):
             return False
 
         # check for valid domain
