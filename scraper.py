@@ -47,18 +47,17 @@ def extract_next_links(url, resp, frontier, logger):
             else:
                 found_url = urljoin(url, found_url) #if not, join urls using urljoin from urllib
 
-        # trap check
-        parents = get_parents(url, frontier, 5) # number should be chnaged based on trap check implementation
-        logger.info(f"{url} had parents {parents}")
-        if len(found_url) == 0: #Check URL is not empty string
-            continue
-
         #Check for dynamic urls
         if "?" in (found_url):
             found_url = found_url.split("?")[0]
 
             if (found_url) == url: #don't crawl if url without query parameters is same as previous url
                 continue 
+        # trap check
+        parents = get_parents(url, frontier, 5) # number should be chnaged based on trap check implementation
+        logger.info(f"{found_url} had parents {parents}")
+        if len(found_url) == 0: #Check URL is not empty string
+            continue
 
         if found_url not in unique_urls:
             urls_list.append(found_url)
@@ -86,7 +85,7 @@ def is_valid(url, config, logger):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv|json"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|json", parsed.path.lower()):
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|.*(json|xmlrpc|mailto)", parsed.path.lower()):
             return False
         # TODO: robot.txt?
         if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):  # check url is in valid domain

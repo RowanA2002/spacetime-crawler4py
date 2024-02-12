@@ -74,6 +74,7 @@ class Frontier(object):
         return urlhash in self.save
 
     def mark_url_complete(self, url):
+        url = normalize(url)
         urlhash = get_urlhash(url)
         if urlhash not in self.save:
             # This should not happen.
