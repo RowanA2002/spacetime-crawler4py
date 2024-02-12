@@ -1,11 +1,11 @@
 import os
 import shelve
+from queue import Empty, Queue
+from threading import RLock, Thread
 
-from threading import Thread, RLock
-from queue import Queue, Empty
-
-from utils import get_logger, get_urlhash, normalize
 from scraper import is_valid
+from utils import get_logger, get_urlhash, normalize
+
 
 class Frontier(object):
     def __init__(self, config, restart):
@@ -40,28 +40,28 @@ class Frontier(object):
             self.logger.info(
                 f"Did not find url file {self.config.url_file}, "
                 f"Creating a new one.")
-            open(self.config.url_file, 'x')
+            open(self.config.url_file, 'x').close()
         elif os.path.exists(self.config.url_file) and restart:
             # Url file does exists, but request to start from seed.
             self.logger.info(
                 f"Found url file {self.config.url_file}, deleting it.")
             os.remove(self.config.url_file)
             # Create one if it does not exist.
-            open(self.config.url_file, 'x')
+            open(self.config.url_file, 'x').close()
 
         if not os.path.exists(self.config.word_file) and not restart:
             # Word file does not exist, but request to load save.
             self.logger.info(
                 f"Did not find word file {self.config.word_file}, "
                 f"Creating a new one.")
-            open(self.config.word_file, 'x')
+            open(self.config.word_file, 'x').close()
         elif os.path.exists(self.config.word_file) and restart:
             # Word file does exists, but request to start from seed.
             self.logger.info(
                 f"Found word file {self.config.word_file}, deleting it.")
             os.remove(self.config.word_file)
             # Create one if it does not exist.
-            open(self.config.word_file, 'x')
+            open(self.config.word_file, 'x').close()
             
 
     def _parse_save_file(self):

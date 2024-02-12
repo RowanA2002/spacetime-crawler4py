@@ -1,14 +1,14 @@
 import csv
 import re
-import shelve
+from urllib.parse import urldefrag, urljoin, urlparse
 
-from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 
 from utils.download import download
-from utils.information_value import information_value
 from utils.get_parents import get_parents
+from utils.information_value import information_value
 from utils.tokenize_string import tokenize
+
 
 def scraper(url, resp, config, logger, frontier):
     links = extract_next_links(url, resp, frontier, logger)
@@ -29,7 +29,7 @@ def extract_next_links(url, resp, frontier, logger):
     if (resp.error != None):
         print(resp.error)
         return urls_list
-    elif (resp.raw_response.content == "" or resp.raw_response.content == None): #Check for dead pages
+    elif (resp.raw_response.content == "" or resp.raw_response.content == None): # Check for dead pages
         print("Page has no data")
         return urls_list
 
