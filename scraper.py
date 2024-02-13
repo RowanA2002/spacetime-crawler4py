@@ -1,14 +1,20 @@
+import csv
 import re
-from urllib.parse import urlparse, urldefrag, urljoin
+from urllib.parse import urldefrag, urljoin, urlparse
+
 from bs4 import BeautifulSoup
 
 from utils.download import download
+from utils.get_parents import get_parents
+from utils.information_value import information_value
+from utils.tokenize_string import tokenize
 
-def scraper(url, resp, config, logger):
-    links = extract_next_links(url, resp, logger)
+def scraper(url, resp, config, logger, frontier):
+    links = extract_next_links(url, resp, frontier, logger)
     return [link for link in links if is_valid(link, config, logger)]
 
-def extract_next_links(url, resp, logger):
+def extract_next_links(url, resp, frontier, logger):
+
     # Implementation required.
     # url: the URL that was used to get the page
     # resp.url: the actual url of the page
@@ -24,26 +30,41 @@ def extract_next_links(url, resp, logger):
         logger.info(resp.error)
         print(resp.error)
         return urls_list
-    elif (resp.raw_response.content == "" or resp.raw_response.content == None): #Check for dead pages
+    elif (resp.raw_response.content == "" or resp.raw_response.content == None): # Check for dead pages
         print("Page has no data")
         logger.info("Page has no data")
         return urls_list
 
-    unique_urls = set() #keeps track of unique urls on page
-    unique_urls.add(url) #add parent url to set
+    unique_urls = set() # keeps track of unique urls on page
+    unique_urls.add(url) # add parent url to set
 
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
 
+    # Report processing
+    page_token_count = 0
+
+    # Record all tokens in page
+    with open(frontier.config.word_file, 'at') as words:
+        for strings in soup.stripped_strings:
+            tokens = tokenize(strings)
+            page_token_count += len(tokens)
+            words.write(' '.join(tokenize) + '\n')
+
+    # Record url and token count
+    with open(frontier.config.url_file, 'w', newline='') as urlcount:
+        urlwriter = csv.writer(urlcount)
+        urlwriter.writerow([url, len(page_token_count)])
+
     for link in soup.find_all(href=True):
         found_url = link['href']
-        found_url = urldefrag(found_url)[0] #defrag URL using urldefrag from urllib
+        found_url = urldefrag(found_url)[0] # defrag URL using urldefrag from urllib
         parsed = urlparse(found_url)
-        if (len(found_url) != 0) and (parsed.scheme == ""): #check if found_url is a relative URL
+        if (len(found_url) != 0) and (parsed.scheme == ""): # check if found_url is a relative URL
             if re.match(r"^(\/\/)", found_url): # if url starts with // (shorthand to request reference url using protocol of current url)
                 current_protocol = urlparse(url).scheme
                 found_url = current_protocol + ":" + found_url
             else:
-                found_url = urljoin(url, found_url) #if not, join urls using urljoin from urllib
+                found_url = urljoin(url, found_url) # if not, join urls using urljoin from urllib
 
         if len(found_url) == 0: #Check URL is not empty string
             continue
@@ -62,9 +83,14 @@ def extract_next_links(url, resp, logger):
         #Check for dynamic urls
         if "?" in (found_url):
             found_url = found_url.split("?")[0]
-
             if (found_url) == url: #don't add if url without query parameters is same as parent url
                 continue 
+
+        # trap check
+        parents = get_parents(url, frontier, 5) # number should be chnaged based on trap check implementation
+        logger.info(f"{found_url} had parents {parents}")
+        if len(found_url) == 0: # Check URL is not empty string
+            continue
 
         if found_url not in unique_urls:
             urls_list.append(found_url)
@@ -76,10 +102,6 @@ def is_valid(url, config, logger):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
-
-    # politeness -- need to do if using multithreading, otherwise already implemented when num threads = 1 using sleep
-    # high textual content
-    # domain
 
     try:
         parsed = urlparse(url)
@@ -97,17 +119,16 @@ def is_valid(url, config, logger):
             return False
 
         # check for valid domain
-        # TODO: robot.txt?
         if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
-            return False
         
         resp = download(url, config, logger)
         if resp.error == None and resp.raw_response != None:
             soup = BeautifulSoup(resp.raw_response.content, "html.parser")
-            # TODO: check for textual content
-        print(url)
+            info = information_value(soup)
+            if info < 0.33: 
+                logger.info(f"Skipped {url}: information value = {info} < 1/3")
+                return False
         return True
-        
     except TypeError:
         print ("TypeError for ", parsed)
         raise
