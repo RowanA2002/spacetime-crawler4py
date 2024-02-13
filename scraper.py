@@ -93,7 +93,7 @@ def is_valid(url, config, logger):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv|json"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$|.*(json|xmlrpc|mailto)", parsed.path.lower()):
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt)$|.*(json|xmlrpc|mailto)", parsed.path.lower()):
             return False
 
         # check for valid domain
