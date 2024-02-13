@@ -72,7 +72,7 @@ def extract_next_links(url, resp, frontier, logger):
             continue
         
         #check for repeating directories
-        if (re.match(r'\/([^\/]+)\/(.+\/)?\1\/(.+\/)?\1', found_url)): #check if directory is repeated 3 or more times
+        if (re.search(r'\/([^\/]+)\/(.+\/)?\1\/(.+\/)?\1', found_url)): #check if directory is repeated 3 or more times
             continue
 
         #check for calendar traps
