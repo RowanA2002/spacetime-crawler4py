@@ -48,18 +48,20 @@ def extract_next_links(url, resp, frontier, logger):
         for strings in soup.stripped_strings:
             tokens = tokenize(strings)
             page_token_count += len(tokens)
-            words.write(' '.join(tokenize) + '\n')
+            words.write(' '.join(tokens) + '\n')
 
     # Record url and token count
-    with open(frontier.config.url_file, 'w', newline='') as urlcount:
+    with open(frontier.config.url_file, 'a', newline='') as urlcount:
         urlwriter = csv.writer(urlcount)
-        urlwriter.writerow([url, len(page_token_count)])
+        urlwriter.writerow([url, page_token_count])
 
     for link in soup.find_all(href=True):
         found_url = link['href']
         found_url = urldefrag(found_url)[0] # defrag URL using urldefrag from urllib
         parsed = urlparse(found_url)
         if (len(found_url) != 0) and (parsed.scheme == ""): # check if found_url is a relative URL
+            if (re.match(r"^\/{3}", found_url)): #if 3 slashes, it is a file URL, don't add
+                continue
             if re.match(r"^(\/\/)", found_url): # if url starts with // (shorthand to request reference url using protocol of current url)
                 current_protocol = urlparse(url).scheme
                 found_url = current_protocol + ":" + found_url
@@ -89,6 +91,7 @@ def extract_next_links(url, resp, frontier, logger):
         # trap check
         parents = get_parents(url, frontier, 5) # number should be chnaged based on trap check implementation
         logger.info(f"{found_url} had parents {parents}")
+
         if len(found_url) == 0: # Check URL is not empty string
             continue
 
@@ -120,7 +123,8 @@ def is_valid(url, config, logger):
 
         # check for valid domain
         if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
-        
+            return False
+
         resp = download(url, config, logger)
         if resp.error == None and resp.raw_response != None:
             soup = BeautifulSoup(resp.raw_response.content, "html.parser")
