@@ -9,8 +9,8 @@ def get_parents(url, frontier, n_parents) -> List:
     parents = [url,]
     parent = frontier.get_parent(url)
     i = 0
-    while parent and i < n_parents:
+    while parent and i < n_parents-1:
         parents.append(parent)
-        parent = frontier.get_parent(url)
+        parent = frontier.get_parent(parent)
         i+=1
     return parents
