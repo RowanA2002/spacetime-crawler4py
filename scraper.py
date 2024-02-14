@@ -8,7 +8,7 @@ from utils.download import download
 from utils.get_parents import get_parents, get_parents_set
 from utils.information_value import information_value
 from utils.tokenize_string import tokenize
-from utils.calender_trap import calendar_trap_check
+from utils.calendar_trap import calendar_trap_check
 
 def scraper(url, resp, config, logger, frontier):
     links = extract_next_links(url, resp, frontier, logger)
