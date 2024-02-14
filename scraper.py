@@ -92,12 +92,10 @@ def extract_next_links(url, resp, frontier, logger):
 
         # trap check
         parents = get_parents_set(url, frontier, 50) # number should be chnaged based on trap check implementation
-        logger.info(f"{found_url} had parents {parents}")
         if (found_url in parents):
             continue
         if calendar_trap_check(url, parents) > 10:
             continue
-
 
         if len(found_url) == 0: # Check URL is not empty string
             continue
