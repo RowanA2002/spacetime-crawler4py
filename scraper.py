@@ -5,7 +5,7 @@ from urllib.parse import urldefrag, urljoin, urlparse
 from bs4 import BeautifulSoup
 
 from utils.download import download
-from utils.get_parents import get_parents
+from utils.get_parents import get_parents, get_parents_set
 from utils.information_value import information_value
 from utils.tokenize_string import tokenize
 
@@ -48,7 +48,8 @@ def extract_next_links(url, resp, frontier, logger):
         for strings in soup.stripped_strings:
             tokens = tokenize(strings)
             page_token_count += len(tokens)
-            words.write(' '.join(tokens) + '\n')
+            if len(tokens) > 0:
+                words.write(' '.join(tokens) + '\n')
 
     # Record url and token count
     with open(frontier.config.url_file, 'a', newline='') as urlcount:
@@ -89,8 +90,11 @@ def extract_next_links(url, resp, frontier, logger):
                 continue 
 
         # trap check
-        parents = get_parents(url, frontier, 5) # number should be chnaged based on trap check implementation
+        parents = get_parents_set(url, frontier, 50) # number should be chnaged based on trap check implementation
         logger.info(f"{found_url} had parents {parents}")
+        if (found_url in parents):
+            continue
+
 
         if len(found_url) == 0: # Check URL is not empty string
             continue
@@ -117,8 +121,8 @@ def is_valid(url, config, logger):
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv|json"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt)$|.*(json|xmlrpc|mailto)", parsed.path.lower()):
+            + r"|thmx|mso|arff|rtf|jar|csv|json|java"
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|vmdk|php|ppsx)$|.*(json|xmlrpc|mailto|\.php)", parsed.path.lower()):
             return False
 
         # check for valid domain
