@@ -92,6 +92,7 @@ def extract_next_links(url, resp, frontier, logger):
         parents = get_parents_set(url, frontier, 50) # number should be chnaged based on trap check implementation
         if (found_url in parents):
             continue
+        logger.info(f"{url} had parents {parents}")
         if calendar_trap_check(url, parents) > 10:
             continue
 
@@ -125,7 +126,7 @@ def is_valid(url, config, logger):
             return False
 
         # check for valid domain
-        if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
+        if parsed.netloc is not None and not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.netloc):
             return False
 
         resp = download(url, config, logger)
