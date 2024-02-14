@@ -8,6 +8,7 @@ from utils.download import download
 from utils.get_parents import get_parents, get_parents_set
 from utils.information_value import information_value
 from utils.tokenize_string import tokenize
+from utils.calender_trap import calendar_trap_check
 
 def scraper(url, resp, config, logger, frontier):
     links = extract_next_links(url, resp, frontier, logger)
@@ -93,6 +94,8 @@ def extract_next_links(url, resp, frontier, logger):
         parents = get_parents_set(url, frontier, 50) # number should be chnaged based on trap check implementation
         logger.info(f"{found_url} had parents {parents}")
         if (found_url in parents):
+            continue
+        if calendar_trap_check(url, parents) > 10:
             continue
 
 
