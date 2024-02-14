@@ -22,7 +22,7 @@ def get_parents_set(url, frontier, n_parents) -> set:
     if not frontier.exists_in_shelf(url):
         raise
     parents = {url}
-    parent = frontier.get_parent(parent)
+    parent = frontier.get_parent(url)
     i = 0
     while parent and i < n_parents:
         parents.add(parent)
