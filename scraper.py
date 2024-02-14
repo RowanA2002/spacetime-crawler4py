@@ -89,7 +89,7 @@ def extract_next_links(url, resp, frontier, logger):
                 continue 
 
         # trap check
-        parents = get_parents_set(found_url, frontier, 50) # number should be chnaged based on trap check implementation
+        parents = get_parents_set(url, frontier, 50) # number should be chnaged based on trap check implementation
         if (found_url in parents):
             continue
         logger.info(f"{url} had parents {parents}")
