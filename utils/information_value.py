@@ -7,4 +7,5 @@ def information_value(soup: BeautifulSoup):
     token_count = 0
     for s in soup.stripped_strings:
         token_count += len(tokenize(s))
-    return token_count/(tag_count+token_count) if (tag_count + token_count) > 0 else token_count
+    iv = token_count/(tag_count+token_count) if (tag_count + token_count) > 0 else 1
+    return iv
