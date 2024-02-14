@@ -48,7 +48,8 @@ def extract_next_links(url, resp, frontier, logger):
         for strings in soup.stripped_strings:
             tokens = tokenize(strings)
             page_token_count += len(tokens)
-            words.write(' '.join(tokens) + '\n')
+            if len(tokens) > 0:
+                words.write(' '.join(tokens) + '\n')
 
     # Record url and token count
     with open(frontier.config.url_file, 'a', newline='') as urlcount:

@@ -28,7 +28,7 @@ def get_n_frequencies(frequencies: Dict[str, int], n: int, stopwords: Set) -> Li
         if token in stopwords:
             continue
         n_frequencies.append((token, freq))
-        if len(frequencies) == n:
+        if len(n_frequencies) == n:
             break
 
 
@@ -59,6 +59,7 @@ def generate_report(url_file: str, word_file: str, stopwordfile: str):
             row = next(urlreader)
             while row is not None:
                 url, token_count = row
+                token_count = int(token_count)
                 defrag = urldefrag(url)[0]
                 if defrag not in unique_urls:
                     unique_page_count +=1
@@ -66,12 +67,15 @@ def generate_report(url_file: str, word_file: str, stopwordfile: str):
                 if token_count >= longest_page[1]:
                     longest_page = (defrag, token_count)
                 parsedurl = urlparse(defrag)
-                if re.match(r".+\.ics\.uci\.edu/.*", parsedurl.netloc):
-                    domain = "/".join(parsedurl.scheme, parsedurl.netloc)
+                if re.match(r".*\.ics\.uci\.edu.*", parsedurl.netloc):
+                    domain = "/".join([parsedurl.scheme, parsedurl.netloc])
                     if domain not in ics_subs:
                         ics_subs[domain] = set()
                     ics_subs[domain].add(defrag)
-                row = next(urlreader)
+                try:
+                    row = next(urlreader)
+                except StopIteration:
+                    break
     ics_sub_counts = [(k, len(v)) for k, v in ics_subs.items()]
     ics_sub_counts.sort()
     # Common words
