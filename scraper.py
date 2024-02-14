@@ -29,10 +29,8 @@ def extract_next_links(url, resp, frontier, logger):
     urls_list = []
     if (resp.error != None):
         logger.info(resp.error)
-        print(resp.error)
         return urls_list
     elif (resp.raw_response.content == "" or resp.raw_response.content == None): # Check for dead pages
-        print("Page has no data")
         logger.info("Page has no data")
         return urls_list
 
