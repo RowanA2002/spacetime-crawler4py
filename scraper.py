@@ -89,11 +89,11 @@ def extract_next_links(url, resp, frontier, logger):
                 continue 
 
         # trap check
-        parents = get_parents_set(url, frontier, 50) # number should be chnaged based on trap check implementation
+        parents = get_parents_set(found_url, frontier, 50) # number should be chnaged based on trap check implementation
         if (found_url in parents):
             continue
         logger.info(f"{url} had parents {parents}")
-        if calendar_trap_check(url, parents) > 10:
+        if calendar_trap_check(found_url, parents) > 10:
             continue
 
         if len(found_url) == 0: # Check URL is not empty string
@@ -121,7 +121,7 @@ def is_valid(url, config, logger):
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv|json|java"
+            + r"|thmx|mso|arff|rtf|jar|csv|json|java|apk|img"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|vmdk|php|ppsx)$|.*(json|xmlrpc|mailto|\.php)", parsed.path.lower()):
             return False
 
