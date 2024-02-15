@@ -31,7 +31,7 @@ def extract_next_links(url, resp, frontier, logger):
         logger.info(resp.error)
         print(resp.error)
         return urls_list
-    elif (resp.raw_response.content == "" or resp.raw_response.content == None): # Check for dead pages
+    if (resp.raw_response.content == "" or resp.raw_response.content == None): # Check for dead pages
         print("Page has no data")
         logger.info("Page has no data")
         return urls_list
@@ -91,11 +91,12 @@ def extract_next_links(url, resp, frontier, logger):
                 continue 
 
         # trap check
-        parents = get_parents_set(url, frontier, 50) # number should be chnaged based on trap check implementation
+        parents = get_parents_set(url, frontier, 50) # number should be changed based on trap check implementation
         logger.info(f"{found_url} had parents {parents}")
         if (found_url in parents):
             continue
-        if calendar_trap_check(url, parents) > 10:
+
+        if calendar_trap_check(found_url, parents) > 10:
             continue
 
 
@@ -123,13 +124,13 @@ def is_valid(url, config, logger):
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1"
+            + r"|epub|dll|cnf|tgz|sha1|img|apk"
             + r"|thmx|mso|arff|rtf|jar|csv|json|java"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|vmdk|php|ppsx)$|.*(json|xmlrpc|mailto|\.php)", parsed.path.lower()):
             return False
 
         # check for valid domain
-        if not re.match(r".*(\.ics|\.cs|\.informatics|\.stat)\.uci\.edu", parsed.hostname):
+        if parsed.netloc is not None and not re.match(r".*(.ics|.cs|.informatics|.stat).uci.edu", parsed.netloc):
             return False
 
         resp = download(url, config, logger)
