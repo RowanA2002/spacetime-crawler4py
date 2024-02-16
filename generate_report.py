@@ -25,7 +25,7 @@ def get_n_frequencies(frequencies: Dict[str, int], n: int, stopwords: Set) -> Li
     items.sort(key=lambda i : (-i[1], i[0]))  # O(nlogn)
     n_frequencies = []
     for token, freq in items:  # O(n)
-        if token in stopwords:
+        if token in stopwords or len(token) < 2 or re.match(r"\d+", token):
             continue
         n_frequencies.append((token, freq))
         if len(n_frequencies) == n:

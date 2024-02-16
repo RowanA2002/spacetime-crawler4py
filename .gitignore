@@ -112,3 +112,4 @@ venv.bak/
 urlcount.csv
 words.txt
 report*
+crawl_archive/
