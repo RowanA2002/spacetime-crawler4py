@@ -130,7 +130,7 @@ def is_valid(url, config, logger):
             + r"|wav|avi|mov|mpe?g|ram|m4v|mkv|ogg|ogv|pdf"
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1|py|sql"
+            + r"|epub|dll|cnf|tgz|sha1|py|sql|conf|svg|tif|r"
             + r"|thmx|mso|arff|rtf|jar|csv|json|java|apk|img|war|xml"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|vmdk|php|ppsx)$|.*(json|xmlrpc|mailto|\.php|attachment\/)"
             + r"|.*\.(war)|.*\/pdf\/.*|.*\/wiki\/.*|.*\/files\/.*|.*attachment\/.*", parsed.path.lower()):
