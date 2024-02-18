@@ -5,10 +5,11 @@ from urllib.parse import urldefrag, urljoin, urlparse
 from bs4 import BeautifulSoup
 
 from utils.download import download
-from utils.get_parents import get_parents, get_parents_set
+from utils.get_parents import get_parents_set
 from utils.information_value import information_value
 from utils.tokenize_string import tokenize
 from utils.calendar_trap import calendar_trap_check
+from utils import normalize
 
 def scraper(url, resp, config, logger, frontier):
     links = extract_next_links(url, resp, frontier, logger)
@@ -27,10 +28,13 @@ def extract_next_links(url, resp, frontier, logger):
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
 
     urls_list = []
-    if (resp.error != None):
-        logger.info(resp.error)
+    if resp.status != 200:
+        if resp.status == 404:
+            logger.info(f"{url} returned 404 not found")
+        elif (resp.error != None):
+            logger.info(resp.error)
         return urls_list
-    elif (resp.raw_response.content == "" or resp.raw_response.content == None): # Check for dead pages
+    if (resp.raw_response.content == "" or resp.raw_response.content == None): # Check for dead pages
         logger.info("Page has no data")
         return urls_list
 
@@ -92,14 +96,13 @@ def extract_next_links(url, resp, frontier, logger):
             if (found_url) == url: #don't add if url without query parameters is same as parent url
                 logger.info(f"SKIPPING {found_url}: Same as parent ({url}) without query")
                 continue 
-
+        found_url = normalize(found_url)
         # trap check
         parents = get_parents_set(url, frontier, 50) # number should be changed based on trap check implementation
         logger.info(f"{found_url} had parents {parents}")
-        if (found_url in parents):
+        if (found_url) in parents:
             logger.info(f"SKIPPING {found_url}: Existed in parents")
             continue
-        logger.info(f"{found_url} had parents {parents}")
         if calendar_trap_check(found_url, parents) > 10:
             logger.info(f"SKIPPING {found_url}: Repeated number pattern found (Calendar)")
             continue
