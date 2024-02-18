@@ -127,13 +127,14 @@ def is_valid(url, config, logger):
         if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
-            + r"|wav|avi|mov|mpe?g|ram|m4v|mkv|ogg|ogv|pdf"
+            + r"|wav|avi|mov|mpe?g|ram|m4v|mkv|ogg|ogv|pdf|war"
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
-            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1|py|sql|conf|svg|tif|r"
+            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso|Z"
+            + r"|epub|dll|cnf|tgz|sha1|py|sql|conf|svg|tif|r|c"
             + r"|thmx|mso|arff|rtf|jar|csv|json|java|apk|img|war|xml"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|vmdk|php|ppsx)$|.*(json|xmlrpc|mailto|\.php|attachment\/)"
-            + r"|.*\.(war)|.*\/pdf\/.*|.*\/wiki\/.*|.*\/files\/.*|.*attachment\/.*", parsed.path.lower()):
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|vmdk|php|ppsx)$"
+            + r"|.*(json|xmlrpc|mailto|\.php|.*attachment\/)"
+            + r"|.*\/(pdf|wiki|files)\/.*", parsed.path.lower()):
             return False
 
         # check for valid domain
