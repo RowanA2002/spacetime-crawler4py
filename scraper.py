@@ -131,7 +131,7 @@ def is_valid(url, config, logger):
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv|json|java|apk|img"
+            + r"|thmx|mso|arff|rtf|jar|csv|json|java|apk|img|war"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|vmdk|php|ppsx)$|.*(json|xmlrpc|mailto|\.php)", parsed.path.lower()):
             return False
 
