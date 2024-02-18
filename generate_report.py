@@ -64,7 +64,7 @@ def generate_report(url_file: str, word_file: str, stopwordfile: str):
                 if defrag not in unique_urls:
                     unique_page_count +=1
                     unique_urls.add(defrag)
-                if token_count >= longest_page[1]:
+                if token_count >= longest_page[1] and not re.match(r".*\.(war)|.*\/pdf\/.*|.*\/~.*\/.+|.*\/wiki\/.*|.*\/files\/.*", defrag):
                     longest_page = (defrag, token_count)
                 parsedurl = urlparse(defrag)
                 if re.match(r".*\.ics\.uci\.edu.*", parsedurl.netloc):
