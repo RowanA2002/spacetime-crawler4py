@@ -103,7 +103,7 @@ def extract_next_links(url, resp, frontier, logger):
         if (found_url) in parents:
             logger.info(f"SKIPPING {found_url}: Existed in parents")
             continue
-        if calendar_trap_check(found_url, parents) > 10:
+        if calendar_trap_check(found_url, parents) > 5:
             logger.info(f"SKIPPING {found_url}: Repeated number pattern found (Calendar)")
             continue
 
