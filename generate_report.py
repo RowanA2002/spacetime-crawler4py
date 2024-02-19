@@ -97,8 +97,10 @@ def generate_report(url_file: str, word_file: str, stopwordfile: str):
         r.write(f"Number of unique pages: {unique_page_count}\n\n")
         r.write(f"Longest Page: {longest_page[0]} at {longest_page[1]} words\n\n")
         r.write("50 Most Common Words:\n\n")
+        i = 1
         for word, count in top_freqs:
-            r.write(f"\t{word} -> {count}\n")
+            r.write(f"{i}. {word} -> {count}\n")
+            i+=1
         r.write("\n")
         r.write("Subdomains Under ics:\n")
         for url, pages in ics_sub_counts:
