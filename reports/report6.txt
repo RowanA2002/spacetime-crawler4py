@@ -1,0 +1,161 @@
+Report Number 6 on Crawl 2 (1/17) of ics
+
+Number of unique pages: 11589
+
+Longest Page: http://www.ics.uci.edu/~shantas/publications/20-secret-sharing-aggregation-TKDE-shantanu at 546530 words
+
+50 Most Common Words:
+
+	research -> 34199
+	uci -> 27524
+	computer -> 22957
+	markellekelly -> 22133
+	information -> 20431
+	ics -> 19225
+	data -> 19170
+	software -> 18508
+	can -> 17156
+	will -> 16652
+	student -> 16599
+	science -> 15467
+	may -> 15124
+	students -> 14263
+	edu -> 13658
+	engineering -> 13338
+	informatics -> 13082
+	graduate -> 12691
+	news -> 12332
+	september -> 12323
+	html -> 11865
+	undergraduate -> 11682
+	time -> 11637
+	design -> 11231
+	people -> 10918
+	one -> 10915
+	october -> 10778
+	https -> 10662
+	events -> 10392
+	department -> 10322
+	new -> 10261
+	update -> 10191
+	course -> 10084
+	june -> 9552
+	july -> 9429
+	ph -> 9406
+	irvine -> 9287
+	university -> 9264
+	projects -> 9242
+	automatic -> 8998
+	november -> 8982
+	school -> 8958
+	systems -> 8918
+	contact -> 8899
+	april -> 8809
+	march -> 8753
+	august -> 8600
+	policies -> 8566
+	courses -> 8529
+	also -> 8415
+
+Subdomains Under ics:
+http/archive.ics.uci.edu, 9
+http/asterix.ics.uci.edu, 3
+http/cert.ics.uci.edu, 26
+http/computableplant.ics.uci.edu, 89
+http/cradl.ics.uci.edu, 2
+http/cwicsocal18.ics.uci.edu, 1
+http/dejavu.ics.uci.edu, 1
+http/dynamo.ics.uci.edu, 31
+http/esl.ics.uci.edu, 5
+http/evoke.ics.uci.edu, 1
+http/flamingo.ics.uci.edu, 16
+http/fr.ics.uci.edu, 3
+http/frost.ics.uci.edu, 1
+http/futurehealth.ics.uci.edu, 87
+http/graphics.ics.uci.edu, 7
+http/graphmod.ics.uci.edu, 1
+http/hai.ics.uci.edu, 6
+http/hobbes.ics.uci.edu, 10
+http/i-sensorium.ics.uci.edu, 6
+http/informatics.ics.uci.edu, 2
+http/ipubmed.ics.uci.edu, 1
+http/isg.ics.uci.edu, 1
+http/luci.ics.uci.edu, 1
+http/malek.ics.uci.edu, 1
+http/mhcid.ics.uci.edu, 1
+http/mondego.ics.uci.edu, 3
+http/perennialpolycultures.ics.uci.edu, 1
+http/plrg.ics.uci.edu, 86
+http/psearch.ics.uci.edu, 1
+http/radicle.ics.uci.edu, 6
+http/riscit.ics.uci.edu, 3
+http/scale.ics.uci.edu, 6
+http/sdcl.ics.uci.edu, 199
+http/seal.ics.uci.edu, 1
+http/sherlock.ics.uci.edu, 7
+http/sli.ics.uci.edu, 223
+http/sourcerer.ics.uci.edu, 1
+http/stairs.ics.uci.edu, 3
+http/swiki.ics.uci.edu, 1
+http/tastier.ics.uci.edu, 1
+http/testlab.ics.uci.edu, 6
+http/tutors.ics.uci.edu, 1
+http/vision.ics.uci.edu, 192
+http/wics.ics.uci.edu, 6
+http/www-db.ics.uci.edu, 25
+http/www.cert.ics.uci.edu, 181
+http/www.graphics.ics.uci.edu, 6
+http/www.ics.uci.edu, 2929
+http/www.informatics.ics.uci.edu, 1
+http/xtune.ics.uci.edu, 3
+https/accessibility.ics.uci.edu, 6
+https/acoi.ics.uci.edu, 63
+https/aiclub.ics.uci.edu, 2
+https/asterix.ics.uci.edu, 4
+https/cbcl.ics.uci.edu, 1
+https/chenli.ics.uci.edu, 13
+https/cml.ics.uci.edu, 284
+https/code.ics.uci.edu, 15
+https/cradl.ics.uci.edu, 8
+https/create.ics.uci.edu, 9
+https/cwicsocal18.ics.uci.edu, 7
+https/cyberclub.ics.uci.edu, 14
+https/dgillen.ics.uci.edu, 23
+https/duttgroup.ics.uci.edu, 117
+https/emj.ics.uci.edu, 62
+https/evoke.ics.uci.edu, 4
+https/futurehealth.ics.uci.edu, 31
+https/hack.ics.uci.edu, 1
+https/hpi.ics.uci.edu, 3
+https/iasl.ics.uci.edu, 19
+https/intranet.ics.uci.edu, 1
+https/ipf.ics.uci.edu, 3
+https/ipubmed.ics.uci.edu, 2
+https/isg.ics.uci.edu, 176
+https/jgarcia.ics.uci.edu, 1
+https/luci.ics.uci.edu, 4
+https/mcs.ics.uci.edu, 20
+https/mdogucu.ics.uci.edu, 6
+https/mds.ics.uci.edu, 26
+https/mhcid.ics.uci.edu, 12
+https/mse.ics.uci.edu, 3
+https/mswe.ics.uci.edu, 9
+https/mt-live.ics.uci.edu, 2
+https/nalini.ics.uci.edu, 5
+https/ngs.ics.uci.edu, 2295
+https/redmiles.ics.uci.edu, 7
+https/seal.ics.uci.edu, 36
+https/sli.ics.uci.edu, 81
+https/statconsulting.ics.uci.edu, 4
+https/student-council.ics.uci.edu, 28
+https/studentcouncil.ics.uci.edu, 29
+https/support.ics.uci.edu, 3
+https/tad.ics.uci.edu, 3
+https/tippersweb.ics.uci.edu, 2
+https/transformativeplay.ics.uci.edu, 39
+https/ugradforms.ics.uci.edu, 1
+https/unite.ics.uci.edu, 12
+https/vision.ics.uci.edu, 21
+https/wearablegames.ics.uci.edu, 1
+https/wics.ics.uci.edu, 727
+https/www.ics.uci.edu, 323
